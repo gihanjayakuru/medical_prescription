@@ -48,6 +48,7 @@ class PharmacyController extends Controller
         $quotation = Quotation::create([
             'prescription_id' => $prescriptionId,
             'pharmacy_user_id' => Auth::id(),
+            'user_id' => $prescription->user_id, // Assuming you're associating it with the user who uploaded the prescription
             'items' => json_encode($quotationItems),
             'total' => $validatedData['total'],
             'status' => 'pending', // Initial status of quotation

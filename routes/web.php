@@ -38,44 +38,30 @@ Route::middleware(['auth'])->group(function () {
 
     // User Routes
     Route::prefix('user')->name('user.')->group(function () {
-
         // Route to show the form to upload a prescription
         Route::get('upload-prescription', [PrescriptionController::class, 'create'])->name('uploadPrescription');
-
         // Route to store the uploaded prescription
         Route::post('upload-prescription', [PrescriptionController::class, 'store'])->name('storePrescription');
-
         // Route to show the list of user's prescriptions
         Route::get('prescriptions', [PrescriptionController::class, 'index'])->name('prescriptions');
-
         // Route to show a specific prescription
         Route::get('prescription/{id}', [PrescriptionController::class, 'show'])->name('showPrescription');
-
         // Route to delete a prescription
         Route::delete('prescription/{id}', [PrescriptionController::class, 'destroy'])->name('destroyPrescription');
-
         // Route to view the list of quotations for the user
-        Route::get('quotations', [UserController::class, 'showQuotations'])->name('quotations');
-
-        // Route to view a specific quotation for the user
-        Route::get('quotation/{id}', [UserController::class, 'showQuotation'])->name('showQuotation');
-
+        Route::get('user/quotations', [UserController::class, 'showQuotations'])->name('user.quotations');
         // Route to respond (accept/reject) a quotation
-        Route::post('quotation/respond/{quotation}', [UserController::class, 'respondToQuotation'])->name('respondToQuotation');
+        Route::post('user/quotation/respond/{quotation}', [UserController::class, 'respondToQuotation'])->name('user.respondToQuotation');
     });
 
     // Pharmacy Routes
     Route::prefix('pharmacy')->name('pharmacy.')->group(function () {
-
         // Route to view all prescriptions for pharmacy users
         Route::get('prescriptions', [PharmacyController::class, 'index'])->name('index');
-
         // Route to show the form to create a quotation for a prescription
         Route::get('create_quotation/{prescription}', [QuotationController::class, 'create'])->name('createQuotation');
-
         // Route to store the created quotation
-        Route::post('store-quotation/{prescription}', [QuotationController::class, 'store'])->name('storeQuotation');
-
+        Route::post('store-quotation/{prescription}', [PharmacyController::class, 'storeQuotation'])->name('storeQuotation');
         // Route to show a specific quotation for the pharmacy user
         Route::get('quotation/{id}', [QuotationController::class, 'show'])->name('showQuotation');
     });

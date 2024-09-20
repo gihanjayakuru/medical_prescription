@@ -12,12 +12,12 @@
     @else
     @foreach($quotations as $quotation)
     <div class="quotation-card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px;">
-        <h2>Quotation for Prescription #{{ $quotation->id }}</h2>
+        <h2>Quotation for Prescription #{{ $quotation->prescription_id }}</h2>
         <p><strong>Items:</strong></p>
         <ul>
             @foreach(json_decode($quotation->items, true) as $item)
             <li>{{ $item['drug'] }} - Quantity: {{ $item['quantity'] }} - Price: ${{ number_format($item['price'], 2) }}
-            </li>
+                - Total: ${{ number_format($item['amount'], 2) }}</li>
             @endforeach
         </ul>
         <p><strong>Total:</strong> ${{ number_format($quotation->total, 2) }}</p>

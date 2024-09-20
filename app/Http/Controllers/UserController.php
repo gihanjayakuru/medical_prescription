@@ -12,33 +12,26 @@ class UserController extends Controller
 {
     public function showQuotations()
     {
-        $quotations = Quotation::whereHas('prescription', function ($query) {
-            $query->where('user_id', Auth::id());
-        })->get();
+        $quotations = Quotation::where('user_id', Auth::id())->get();
 
         return view('user.quotations', compact('quotations'));
     }
 
-    public function showQuotation($quotationId)
-    {
-        $quotation = Quotation::with('prescription')->whereHas('prescription', function ($query) {
-            $query->where('user_id', Auth::id());
-        })->findOrFail($quotationId);
 
-        return view('user.show-quotation', compact('quotation'));
-    }
-
-    public function respondToQuotation(Request $request, Quotation $quotation)
+    // Method to respond to a quotation
+    public function respondToQuotation(Request $request, $quotationId)
     {
-        $validated = $request->validate([
+        $request->validate([
             'status' => 'required|in:accepted,rejected',
         ]);
 
-        $quotation->update(['status' => $validated['status']]);
+        // Find the quotation and update its status
+        $quotation = Quotation::findOrFail($quotationId);
+        $quotation->status = $request->status; // Update status
+        $quotation->save();
 
-        $pharmacyEmail = 'pharmacy@example.com';
-        Mail::to($pharmacyEmail)->send(new QuotationResponseMail($quotation));
+        // Optionally, add logic to notify the pharmacy or log the response
 
-        return redirect()->route('user.quotations')->with('success', 'Your response to the quotation has been sent.');
+        return redirect()->route('user.quotations')->with('success', 'Quotation response recorded successfully.');
     }
 }
