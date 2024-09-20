@@ -12,8 +12,8 @@ class QuotationController extends Controller
 {
     public function create($prescriptionId)
     {
-        // Get the prescription data to display
-        $prescription = Prescription::findOrFail($prescriptionId);
+        // Get the prescription data to display, including related user data
+        $prescription = Prescription::with('user')->findOrFail($prescriptionId);
         return view('pharmacy.create_quotation', compact('prescription'));
     }
 

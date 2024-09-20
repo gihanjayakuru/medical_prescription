@@ -5,70 +5,63 @@
 @section('content')
 
 <div class="container">
-    <h1>Create Quotation</h1>
-
-    <!-- Row for Prescription Image and Quotation Form -->
-    <div class="row">
-        <!-- Prescription Image Section -->
-        <div class="col-md-6">
-            <h3>Prescription (Image)</h3>
-            <img src="{{ asset('storage/prescriptions/' . json_decode($prescription->images)[0]) }}"
-                alt="Prescription Image" class="img-fluid" style="border: 1px solid #ccc; margin-bottom: 10px;">
-            <div class="row mt-2">
-                @foreach(array_slice(json_decode($prescription->images), 1) as $image)
-                <div class="col-md-2">
-                    <img src="{{ asset('storage/prescriptions/' . $image) }}" alt="Thumbnail" class="img-fluid"
-                        style="border: 1px solid #ccc; margin-bottom: 10px;">
-                </div>
-                @endforeach
+    <!-- Left side for Prescription Images -->
+    <div class="image-gallery">
+        <h3>Prescription (Image)</h3>
+        <img src="{{ asset('storage/prescriptions/' . json_decode($prescription->images)[0]) }}"
+            alt="Prescription Image" class="img-fluid">
+        <div class="row mt-2">
+            @foreach(array_slice(json_decode($prescription->images), 1) as $image)
+            <div class="col-md-12">
+                <img src="{{ asset('storage/prescriptions/' . $image) }}" alt="Thumbnail" class="img-fluid">
             </div>
+            @endforeach
         </div>
+    </div>
 
-        <!-- Quotation Form Section -->
-        <div class="col-md-6">
-            <h3>Quotation</h3>
+    <!-- Right side for Quotation Form -->
+    <div class="quotation-form">
+        <h3>Quotation</h3>
 
-            <!-- Table for displaying added drugs -->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Drug</th>
-                        <th>Quantity</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody id="quotation-items">
-                    <!-- Dynamic items will appear here -->
-                </tbody>
-            </table>
+        <!-- Table for displaying added drugs -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Drug</th>
+                    <th>Quantity</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="quotation-items">
+                <!-- Dynamic items will appear here -->
+            </tbody>
+        </table>
 
-            <!-- Total Amount -->
-            <h4>Total: <span id="total">0.00</span></h4>
+        <!-- Total Amount -->
+        <h4>Total: <span id="total">0.00</span></h4>
 
-            <!-- Form to Add Drugs to Quotation -->
-            <form id="add-quotation-item-form">
-                @csrf
-                <div class="form-group">
-                    <label for="drug">Drug</label>
-                    <input type="text" name="drug" id="drug" class="form-control" placeholder="Enter drug name"
-                        required>
-                </div>
-                <div class="form-group">
-                    <label for="quantity">Quantity</label>
-                    <input type="number" name="quantity" id="quantity" class="form-control" placeholder="Enter quantity"
-                        required>
-                </div>
-                <button type="button" class="btn btn-primary" id="add-item">Add</button>
-            </form>
+        <!-- Form to Add Drugs to Quotation -->
+        <form id="add-quotation-item-form">
+            @csrf
+            <div class="form-group">
+                <label for="drug">Drug</label>
+                <input type="text" name="drug" id="drug" class="form-control" placeholder="Enter drug name" required>
+            </div>
+            <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input type="number" name="quantity" id="quantity" class="form-control" placeholder="Enter quantity"
+                    required>
+            </div>
+            <button type="button" class="btn btn-primary" id="add-item">Add</button>
+        </form>
 
-            <!-- Form to Submit the Quotation -->
-            <form action="{{ route('pharmacy.storeQuotation', $prescription->id) }}" method="POST">
-                @csrf
-                <input type="hidden" name="items" id="items">
-                <input type="hidden" name="total" id="total-input">
-                <button type="submit" class="btn btn-success mt-3">Send Quotation</button>
-            </form>
-        </div>
+        <!-- Form to Submit the Quotation -->
+        <form action="{{ route('pharmacy.storeQuotation', $prescription->id) }}" method="POST">
+            @csrf
+            <input type="hidden" name="items" id="items">
+            <input type="hidden" name="total" id="total-input">
+            <button type="submit" class="btn btn-success mt-3">Send Quotation</button>
+        </form>
     </div>
 </div>
 
