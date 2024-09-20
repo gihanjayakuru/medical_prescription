@@ -59,4 +59,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(Prescription::class);
     }
+
+    // Relationship with Quotations (received)
+    public function quotations()
+    {
+        return $this->hasMany(Quotation::class);
+    }
+
+    // Relationship with Quotations (sent by pharmacy)
+    public function sentQuotations()
+    {
+        return $this->hasMany(Quotation::class, 'pharmacy_user_id');
+    }
 }

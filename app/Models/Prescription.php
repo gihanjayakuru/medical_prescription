@@ -10,6 +10,7 @@ class Prescription extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id',
         'user_id',
         'images',
         'note',
@@ -21,5 +22,10 @@ class Prescription extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function quotations()
+    {
+        return $this->hasMany(Quotation::class);
     }
 }

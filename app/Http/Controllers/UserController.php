@@ -13,7 +13,7 @@ class UserController extends Controller
     public function showQuotations()
     {
         $quotations = Quotation::where('user_id', Auth::id())->get();
-
+        dd($quotations);
         return view('user.quotations', compact('quotations'));
     }
 
@@ -21,17 +21,15 @@ class UserController extends Controller
     // Method to respond to a quotation
     public function respondToQuotation(Request $request, $quotationId)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'status' => 'required|in:accepted,rejected',
         ]);
 
-        // Find the quotation and update its status
+        // Update the quotation status
         $quotation = Quotation::findOrFail($quotationId);
-        $quotation->status = $request->status; // Update status
+        $quotation->status = $validatedData['status'];
         $quotation->save();
 
-        // Optionally, add logic to notify the pharmacy or log the response
-
-        return redirect()->route('user.quotations')->with('success', 'Quotation response recorded successfully.');
+        return redirect()->route('user.quotations')->with('success', 'Quotation status updated.');
     }
 }

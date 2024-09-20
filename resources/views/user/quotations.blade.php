@@ -8,7 +8,7 @@
     <h1>My Quotations</h1>
 
     @if($quotations->isEmpty())
-    <p>No quotations available.</p>
+    <p>No quotations received.</p>
     @else
     @foreach($quotations as $quotation)
     <div class="quotation-card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px;">
@@ -21,6 +21,7 @@
             @endforeach
         </ul>
         <p><strong>Total:</strong> ${{ number_format($quotation->total, 2) }}</p>
+        <p><strong>Status:</strong> {{ ucfirst($quotation->status) }}</p>
         <form action="{{ route('user.respondToQuotation', $quotation->id) }}" method="POST">
             @csrf
             <button type="submit" name="status" value="accepted" class="btn btn-success">Accept</button>

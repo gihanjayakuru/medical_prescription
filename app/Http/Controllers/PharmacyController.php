@@ -25,13 +25,16 @@ class PharmacyController extends Controller
         return view('pharmacy.create_quotation', compact('prescription'));
     }
 
-    // public function showQuotations()
-    // {
-    //     // Fetch quotations created by the authenticated pharmacy user
-    //     $quotations = Quotation::where('pharmacy_user_id', Auth::id())->get();
+    public function showQuotations()
+    {
+        // Fetch quotations created by the authenticated pharmacy user
+        $quotations = Quotation::where('pharmacy_user_id', Auth::id())->get();
 
-    //     return view('pharmacy.quotations', compact('quotations'));
-    // }
+        dd($quotations);
+
+        return view('pharmacy.quotations', compact('quotations'));
+    }
+
     public function storeQuotation(Request $request, $prescriptionId)
     {
         // Validate the request data
@@ -54,7 +57,7 @@ class PharmacyController extends Controller
         $quotation = Quotation::create([
             'prescription_id' => $prescriptionId,
             'pharmacy_user_id' => Auth::id(), // ID of the logged-in pharmacy user
-            'user_id' => Prescription::findOrFail($prescriptionId)->user_id, // Set the user ID from the prescription
+            'user_id' => Prescription::find(id: $prescriptionId)->user_id, // Set the user ID from the prescription
             'items' => json_encode($quotationItems), // Store items as JSON
             'total' => $validatedData['total'], // Total amount
             'status' => 'pending', // Initial status of the quotation
