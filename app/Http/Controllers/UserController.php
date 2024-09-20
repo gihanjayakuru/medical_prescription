@@ -13,7 +13,7 @@ class UserController extends Controller
     public function showQuotations()
     {
         $quotations = Quotation::where('user_id', Auth::id())->get();
-        dd($quotations);
+
         return view('user.quotations', compact('quotations'));
     }
 

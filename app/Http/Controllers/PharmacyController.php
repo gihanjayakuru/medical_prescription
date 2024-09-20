@@ -30,8 +30,6 @@ class PharmacyController extends Controller
         // Fetch quotations created by the authenticated pharmacy user
         $quotations = Quotation::where('pharmacy_user_id', Auth::id())->get();
 
-        dd($quotations);
-
         return view('pharmacy.quotations', compact('quotations'));
     }
 

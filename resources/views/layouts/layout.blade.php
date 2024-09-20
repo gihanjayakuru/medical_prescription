@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>@yield('title', 'Your Application')</title>
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+ <link href="{{ asset('assets/css/styles.css') }}" rel="stylesheet" />
 </head>
 
 <body>
@@ -44,6 +44,8 @@
 
 
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}" crossorigin="anonymous"></script>
+        <script src="{{ asset('assets/js/scripts.js') }}" crossorigin="anonymous"></script>
 </body>
 
 </html>
