@@ -20,7 +20,7 @@
         <h3>Prescription Images</h3>
         <div class="row">
             <div class="col-md-6">
-                <img src="{{ asset('storage/prescriptions/' . json_decode($prescription->images)[0]) }}"
+                <img src="{{ asset('storage/' . json_decode($prescription->images)[0]) }}"
                     alt="Prescription Image" class="img-fluid" style="border: 1px solid #ccc; margin-bottom: 10px;">
             </div>
         </div>
@@ -28,7 +28,7 @@
         <div class="row">
             @foreach(array_slice(json_decode($prescription->images), 1) as $image)
             <div class="col-md-2">
-                <img src="{{ asset('storage/prescriptions/' . $image) }}" alt="Prescription Thumbnail" class="img-fluid"
+                <img src="{{ asset('storage/' . $image) }}" alt="Prescription Thumbnail" class="img-fluid"
                     style="border: 1px solid #ccc; margin-bottom: 10px;">
             </div>
             @endforeach

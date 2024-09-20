@@ -11,58 +11,66 @@ use Illuminate\Support\Facades\Mail;
 
 class PharmacyController extends Controller
 {
+    // Display all prescriptions for pharmacy users
     public function index()
     {
         $prescriptions = Prescription::with('user')->get();
         return view('pharmacy.index', compact('prescriptions'));
     }
 
+    // Show the form for creating a quotation for a prescription
     public function createQuotation($prescriptionId)
     {
         $prescription = Prescription::findOrFail($prescriptionId);
         return view('pharmacy.create_quotation', compact('prescription'));
     }
 
+    // public function showQuotations()
+    // {
+    //     // Fetch quotations created by the authenticated pharmacy user
+    //     $quotations = Quotation::where('pharmacy_user_id', Auth::id())->get();
+
+    //     return view('pharmacy.quotations', compact('quotations'));
+    // }
     public function storeQuotation(Request $request, $prescriptionId)
     {
         // Validate the request data
         $validatedData = $request->validate([
-            'items' => 'required|array',
-            'items.*.drug' => 'required|string',
-            'items.*.quantity' => 'required|integer|min:1',
-            'items.*.price' => 'required|numeric|min:0',
+            'items' => 'required|string', // Expecting a JSON string
             'total' => 'required|numeric|min:0',
         ]);
 
-        // Prepare the quotation data
-        $quotationItems = array_map(function ($item) {
-            return [
-                'drug' => $item['drug'],
-                'quantity' => $item['quantity'],
-                'price' => $item['price'],
-                'amount' => $item['quantity'] * $item['price'],
-            ];
-        }, $validatedData['items']);
+        // Decode the JSON string to an array
+        $quotationItems = json_decode($validatedData['items'], true);
+
+        // Additional validation for the decoded items
+        foreach ($quotationItems as $item) {
+            if (!isset($item['drug'], $item['quantity'], $item['price'])) {
+                return redirect()->back()->withErrors(['msg' => 'Invalid item data.']);
+            }
+        }
 
         // Create a new quotation
         $quotation = Quotation::create([
             'prescription_id' => $prescriptionId,
-            'pharmacy_user_id' => Auth::id(),
-            'user_id' => $prescription->user_id, // Assuming you're associating it with the user who uploaded the prescription
-            'items' => json_encode($quotationItems),
-            'total' => $validatedData['total'],
-            'status' => 'pending', // Initial status of quotation
+            'pharmacy_user_id' => Auth::id(), // ID of the logged-in pharmacy user
+            'user_id' => Prescription::findOrFail($prescriptionId)->user_id, // Set the user ID from the prescription
+            'items' => json_encode($quotationItems), // Store items as JSON
+            'total' => $validatedData['total'], // Total amount
+            'status' => 'pending', // Initial status of the quotation
         ]);
 
         // Send email notification to the user
         $prescription = Prescription::findOrFail($prescriptionId);
         Mail::to($prescription->user->email)->send(new QuotationMail($quotation));
 
-        // Redirect back to the pharmacy dashboard with a success message
+        // Redirect back to the pharmacy dashboard with success message
         return redirect()->route('pharmacy.index')->with('success', 'Quotation created and sent to the user.');
     }
 
 
+
+    // Store a new prescription
     public function storePrescription(Request $request)
     {
         $validatedData = $request->validate([
@@ -75,7 +83,7 @@ class PharmacyController extends Controller
         $imagePaths = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('prescriptions', 'public');
+                $path = $image->store('uploads/prescriptions', 'public');
                 $imagePaths[] = $path;
             }
         }

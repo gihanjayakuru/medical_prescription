@@ -27,7 +27,7 @@
         <h3>Prescription Images</h3>
         @if($prescription->images)
         @foreach(json_decode($prescription->images) as $image)
-        <img src="{{ asset('storage/prescriptions/' . $image) }}" alt="Prescription Image" width="200px"
+        <img src="{{ asset('storage/' . $image) }}" alt="Prescription Image" width="200px"
             style="margin-right: 10px;">
         @endforeach
         @else

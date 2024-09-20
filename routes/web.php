@@ -48,10 +48,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('prescription/{id}', [PrescriptionController::class, 'show'])->name('showPrescription');
         // Route to delete a prescription
         Route::delete('prescription/{id}', [PrescriptionController::class, 'destroy'])->name('destroyPrescription');
-        // Route to view the list of quotations for the user
-        Route::get('user/quotations', [UserController::class, 'showQuotations'])->name('user.quotations');
+        // Route for user to show all quotations they received
+        Route::get('quotations', [UserController::class, 'showQuotations'])->name('quotations');
+        // Route to view a specific quotation for the user
+        Route::get('quotation/{id}', [UserController::class, 'showQuotation'])->name('showQuotation');
         // Route to respond (accept/reject) a quotation
-        Route::post('user/quotation/respond/{quotation}', [UserController::class, 'respondToQuotation'])->name('user.respondToQuotation');
+        Route::post('quotation/respond/{quotation}', [UserController::class, 'respondToQuotation'])->name('respondToQuotation');
     });
 
     // Pharmacy Routes
@@ -59,10 +61,12 @@ Route::middleware(['auth'])->group(function () {
         // Route to view all prescriptions for pharmacy users
         Route::get('prescriptions', [PharmacyController::class, 'index'])->name('index');
         // Route to show the form to create a quotation for a prescription
-        Route::get('create_quotation/{prescription}', [QuotationController::class, 'create'])->name('createQuotation');
+        Route::get('create_quotation/{prescription}', [PharmacyController::class, 'createQuotation'])->name('createQuotation');
         // Route to store the created quotation
-        Route::post('store-quotation/{prescription}', [PharmacyController::class, 'storeQuotation'])->name('storeQuotation');
+        Route::post('pharmacy/store-quotation/{prescription}', [PharmacyController::class, 'storeQuotation'])->name('storeQuotation');
         // Route to show a specific quotation for the pharmacy user
         Route::get('quotation/{id}', [QuotationController::class, 'show'])->name('showQuotation');
+        // Route for pharmacy to show all quotations they created
+        Route::get('pharmacy/quotations', [PharmacyController::class, 'showQuotations'])->name('pharmacy.quotations');
     });
 });

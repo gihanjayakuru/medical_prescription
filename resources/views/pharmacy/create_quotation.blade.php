@@ -7,12 +7,12 @@
 <div class="container">
     <div class="image-gallery">
         <h3>Prescription (Image)</h3>
-        <img src="{{ asset('storage/prescriptions/' . json_decode($prescription->images)[0]) }}"
+        <img src="{{ asset('storage/' . json_decode($prescription->images)[0]) }}"
             alt="Prescription Image" class="img-fluid">
         <div class="row mt-2">
             @foreach(array_slice(json_decode($prescription->images), 1) as $image)
             <div class="col-md-12">
-                <img src="{{ asset('storage/prescriptions/' . $image) }}" alt="Thumbnail" class="img-fluid">
+                <img src="{{ asset('storage/' . $image) }}" alt="Thumbnail" class="img-fluid">
             </div>
             @endforeach
         </div>
@@ -27,7 +27,7 @@
                     <th>Drug</th>
                     <th>Quantity</th>
                     <th>Unit Price</th>
-                    <th>Amount</th>
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody id="quotation-items">
@@ -67,8 +67,8 @@
 <script>
     document.getElementById('add-item').addEventListener('click', function () {
         let drug = document.getElementById('drug').value;
-        let quantity = parseInt(document.getElementById('quantity').value); // Convert to integer
-        let price = parseFloat(document.getElementById('price').value); // Convert to float
+        let quantity = parseInt(document.getElementById('quantity').value);
+        let price = parseFloat(document.getElementById('price').value);
         let amount = quantity * price;
 
         // Format the row to include the unit price and total
@@ -100,9 +100,9 @@
             let cells = row.querySelectorAll('td');
             items.push({
                 drug: cells[0].textContent,
-                quantity: parseInt(cells[1].textContent.split(' x ')[0]), // Extract quantity and convert to integer
-                price: parseFloat(cells[2].textContent), // Get price and convert to float
-                amount: parseFloat(cells[3].textContent) // Get total amount and convert to float
+                quantity: parseInt(cells[1].textContent.split(' x ')[0]),
+                price: parseFloat(cells[2].textContent),
+                amount: parseFloat(cells[3].textContent)
             });
         });
 

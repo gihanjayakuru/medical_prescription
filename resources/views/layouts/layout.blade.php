@@ -17,7 +17,7 @@
                 <a href="{{ route('dashboard') }}" style="text-decoration: none; color: #000;">Dashboard</a>
             </li>
             <li style="margin-right: 15px;">
-                <a href="{{ route('user.quotations') }}" style="text-decoration: none; color: #000;">My Quotations</a>
+                <a href="{{ route('user.quotations') }}" style="text-decoration: none; color: #000;">Quotations</a>
             </li>
 
 

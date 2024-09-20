@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('prescription_id');
             $table->unsignedBigInteger('pharmacy_user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->json('items'); // Drugs, quantity, and price stored as JSON
             $table->decimal('total', 8, 2);
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');

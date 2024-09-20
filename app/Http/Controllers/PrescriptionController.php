@@ -33,7 +33,7 @@ class PrescriptionController extends Controller
         $imagePaths = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $path = $image->store('prescriptions', 'public');
+                $path = $image->store('store/prescriptions', 'public');
                 $imagePaths[] = $path;
             }
         }
