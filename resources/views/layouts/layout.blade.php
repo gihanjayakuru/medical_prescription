@@ -14,7 +14,7 @@
     <nav style="background-color: #f8f9fa; padding: 10px;">
         <ul style="list-style-type: none; margin: 0; padding: 0; display: flex;">
             <li style="margin-right: 15px;">
-                <a href="{{ route('user.prescriptions') }}" style="text-decoration: none; color: #000;">Home</a>
+                <a href="{{ route('dashboard') }}" style="text-decoration: none; color: #000;">Dashboard</a>
             </li>
             <li style="margin-right: 15px;">
                 <a href="{{ route('user.quotations') }}" style="text-decoration: none; color: #000;">My Quotations</a>

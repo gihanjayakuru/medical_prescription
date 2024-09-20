@@ -11,10 +11,8 @@ use Illuminate\Support\Facades\Mail;
 
 class PharmacyController extends Controller
 {
-
     public function index()
     {
-
         $prescriptions = Prescription::with('user')->get();
         return view('pharmacy.index', compact('prescriptions'));
     }
@@ -27,26 +25,42 @@ class PharmacyController extends Controller
 
     public function storeQuotation(Request $request, $prescriptionId)
     {
+        // Validate the request data
         $validatedData = $request->validate([
             'items' => 'required|array',
-            'items.*.name' => 'required|string',
-            'items.*.price' => 'required|numeric',
-            'total' => 'required|numeric',
+            'items.*.drug' => 'required|string',
+            'items.*.quantity' => 'required|integer|min:1',
+            'items.*.price' => 'required|numeric|min:0',
+            'total' => 'required|numeric|min:0',
         ]);
 
+        // Prepare the quotation data
+        $quotationItems = array_map(function ($item) {
+            return [
+                'drug' => $item['drug'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+                'amount' => $item['quantity'] * $item['price'],
+            ];
+        }, $validatedData['items']);
+
+        // Create a new quotation
         $quotation = Quotation::create([
             'prescription_id' => $prescriptionId,
             'pharmacy_user_id' => Auth::id(),
-            'items' => json_encode($validatedData['items']),
+            'items' => json_encode($quotationItems),
             'total' => $validatedData['total'],
-            'status' => 'pending',
+            'status' => 'pending', // Initial status of quotation
         ]);
 
-        $prescription = Prescription::find($prescriptionId);
+        // Send email notification to the user
+        $prescription = Prescription::findOrFail($prescriptionId);
         Mail::to($prescription->user->email)->send(new QuotationMail($quotation));
 
+        // Redirect back to the pharmacy dashboard with a success message
         return redirect()->route('pharmacy.index')->with('success', 'Quotation created and sent to the user.');
     }
+
 
     public function storePrescription(Request $request)
     {

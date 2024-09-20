@@ -6,6 +6,7 @@ use App\Http\Controllers\PrescriptionController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PharmacyController;
+use App\Http\Controllers\DashboardController;
 
 // Redirect root URL based on authentication and role
 Route::get('/', function () {
@@ -31,6 +32,9 @@ Auth::routes();
 
 // Routes for authenticated users only
 Route::middleware(['auth'])->group(function () {
+
+    // Dashboard Route
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // User Routes
     Route::prefix('user')->name('user.')->group(function () {

@@ -26,6 +26,7 @@
                 <tr>
                     <th>Drug</th>
                     <th>Quantity</th>
+                    <th>Unit Price</th>
                     <th>Amount</th>
                 </tr>
             </thead>
@@ -46,9 +47,13 @@
                 <input type="number" name="quantity" id="quantity" class="form-control" placeholder="Enter quantity"
                     required>
             </div>
+            <div class="form-group">
+                <label for="price">Unit Price</label>
+                <input type="number" name="price" id="price" class="form-control" placeholder="Enter unit price"
+                    required>
+            </div>
             <button type="button" class="btn btn-primary" id="add-item">Add</button>
         </form>
-
 
         <form action="{{ route('pharmacy.storeQuotation', $prescription->id) }}" method="POST">
             @csrf
@@ -62,15 +67,18 @@
 <script>
     document.getElementById('add-item').addEventListener('click', function () {
         let drug = document.getElementById('drug').value;
-        let quantity = document.getElementById('quantity').value;
-        let price = 10;  // Replace this with real price data
+        let quantity = parseInt(document.getElementById('quantity').value); // Convert to integer
+        let price = parseFloat(document.getElementById('price').value); // Convert to float
         let amount = quantity * price;
 
+        // Format the row to include the unit price and total
         let row = `<tr>
             <td>${drug}</td>
-            <td>${quantity}</td>
+            <td>${quantity} x ${price.toFixed(2)}</td>
+            <td>${price.toFixed(2)}</td>
             <td>${amount.toFixed(2)}</td>
         </tr>`;
+
         document.getElementById('quotation-items').insertAdjacentHTML('beforeend', row);
 
         let totalElement = document.getElementById('total');
@@ -78,8 +86,10 @@
         currentTotal += amount;
         totalElement.textContent = currentTotal.toFixed(2);
 
+        // Clear input fields
         document.getElementById('drug').value = '';
         document.getElementById('quantity').value = '';
+        document.getElementById('price').value = '';
 
         updateHiddenFields();
     });
@@ -90,8 +100,9 @@
             let cells = row.querySelectorAll('td');
             items.push({
                 drug: cells[0].textContent,
-                quantity: cells[1].textContent,
-                amount: cells[2].textContent
+                quantity: parseInt(cells[1].textContent.split(' x ')[0]), // Extract quantity and convert to integer
+                price: parseFloat(cells[2].textContent), // Get price and convert to float
+                amount: parseFloat(cells[3].textContent) // Get total amount and convert to float
             });
         });
 
