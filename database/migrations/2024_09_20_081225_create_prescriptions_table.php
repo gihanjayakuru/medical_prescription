@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('prescriptions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');  // Foreign key to users table
+            $table->text('images');  // Column to store JSON-encoded image paths
+            $table->string('note')->nullable();
             $table->string('delivery_address');
             $table->string('delivery_time');
-            $table->text('note')->nullable();
-            $table->json('prescription_images');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

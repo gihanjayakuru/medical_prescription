@@ -7,14 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class Prescription extends Model
 {
-    protected $fillable = ['user_id', 'delivery_address', 'delivery_time', 'note', 'prescription_images'];
+    use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'images',
+        'note',
+        'delivery_address',
+        'delivery_time',
+    ];
+
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-    protected $casts = [
-        'prescription_images' => 'array',
-    ];
 }

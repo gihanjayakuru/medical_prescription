@@ -1,52 +1,123 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.layout')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Quotation</title>
-</head>
+@section('title', 'Create Quotation')
 
-<body>
-    <h1>Create Quotation for Prescription</h1>
+@section('content')
 
-    <form action="{{ route('pharmacy.storeQuotation', $prescription->id) }}" method="POST">
-        @csrf
+<div class="container">
+    <h1>Create Quotation</h1>
 
-        <div>
-            <label for="drug">Drug:</label>
-            <input type="text" name="items[0][drug]" required>
+    <!-- Row for Prescription Image and Quotation Form -->
+    <div class="row">
+        <!-- Prescription Image Section -->
+        <div class="col-md-6">
+            <h3>Prescription (Image)</h3>
+            <img src="{{ asset('storage/prescriptions/' . json_decode($prescription->images)[0]) }}"
+                alt="Prescription Image" class="img-fluid" style="border: 1px solid #ccc; margin-bottom: 10px;">
+            <div class="row mt-2">
+                @foreach(array_slice(json_decode($prescription->images), 1) as $image)
+                <div class="col-md-2">
+                    <img src="{{ asset('storage/prescriptions/' . $image) }}" alt="Thumbnail" class="img-fluid"
+                        style="border: 1px solid #ccc; margin-bottom: 10px;">
+                </div>
+                @endforeach
+            </div>
         </div>
 
-        <div>
-            <label for="quantity">Quantity:</label>
-            <input type="number" name="items[0][quantity]" required>
-        </div>
+        <!-- Quotation Form Section -->
+        <div class="col-md-6">
+            <h3>Quotation</h3>
 
-        <div>
-            <label for="price">Price per unit:</label>
-            <input type="number" step="0.01" name="items[0][price]" required>
-        </div>
+            <!-- Table for displaying added drugs -->
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Drug</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="quotation-items">
+                    <!-- Dynamic items will appear here -->
+                </tbody>
+            </table>
 
-        <div>
-            <button type="button" id="addMore">Add More Items</button>
-        </div>
+            <!-- Total Amount -->
+            <h4>Total: <span id="total">0.00</span></h4>
 
-        <div>
-            <label for="total">Total Price:</label>
-            <input type="number" step="0.01" name="total" required>
-        </div>
+            <!-- Form to Add Drugs to Quotation -->
+            <form id="add-quotation-item-form">
+                @csrf
+                <div class="form-group">
+                    <label for="drug">Drug</label>
+                    <input type="text" name="drug" id="drug" class="form-control" placeholder="Enter drug name"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" name="quantity" id="quantity" class="form-control" placeholder="Enter quantity"
+                        required>
+                </div>
+                <button type="button" class="btn btn-primary" id="add-item">Add</button>
+            </form>
 
-        <div>
-            <button type="submit">Send Quotation</button>
+            <!-- Form to Submit the Quotation -->
+            <form action="{{ route('pharmacy.storeQuotation', $prescription->id) }}" method="POST">
+                @csrf
+                <input type="hidden" name="items" id="items">
+                <input type="hidden" name="total" id="total-input">
+                <button type="submit" class="btn btn-success mt-3">Send Quotation</button>
+            </form>
         </div>
-    </form>
+    </div>
+</div>
 
-    <script>
-        document.getElementById('addMore').addEventListener('click', function() {
-            // Add logic to dynamically add more item input fields
+<!-- JavaScript to dynamically add items to the quotation -->
+<script>
+    document.getElementById('add-item').addEventListener('click', function () {
+        let drug = document.getElementById('drug').value;
+        let quantity = document.getElementById('quantity').value;
+        let price = 10;  // Replace this with real price data
+        let amount = quantity * price;
+
+        // Add the item to the table
+        let row = `<tr>
+            <td>${drug}</td>
+            <td>${quantity}</td>
+            <td>${amount.toFixed(2)}</td>
+        </tr>`;
+        document.getElementById('quotation-items').insertAdjacentHTML('beforeend', row);
+
+        // Update the total
+        let totalElement = document.getElementById('total');
+        let currentTotal = parseFloat(totalElement.textContent);
+        currentTotal += amount;
+        totalElement.textContent = currentTotal.toFixed(2);
+
+        // Clear the form inputs
+        document.getElementById('drug').value = '';
+        document.getElementById('quantity').value = '';
+
+        // Update hidden form fields for form submission
+        updateHiddenFields();
+    });
+
+    function updateHiddenFields() {
+        // Collect all items in the table
+        let items = [];
+        document.querySelectorAll('#quotation-items tr').forEach(function (row) {
+            let cells = row.querySelectorAll('td');
+            items.push({
+                drug: cells[0].textContent,
+                quantity: cells[1].textContent,
+                amount: cells[2].textContent
+            });
         });
-    </script>
-</body>
 
-</html>
+        // Update hidden form fields
+        document.getElementById('items').value = JSON.stringify(items);
+        document.getElementById('total-input').value = document.getElementById('total').textContent;
+    }
+</script>
+
+@endsection
