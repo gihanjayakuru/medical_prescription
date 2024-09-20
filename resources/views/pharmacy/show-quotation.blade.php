@@ -1,15 +1,11 @@
 @extends('layouts.layout')
-<!-- Extends the main layout -->
 
 @section('title', 'Quotation Details')
-<!-- Set the page title -->
 
 @section('content')
-<!-- Page-specific content section starts here -->
 
 <h1>Quotation Details</h1>
 
-<!-- Quotation Information -->
 <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px;">
     <h2>Prescription by {{ $quotation->prescription->user->name }}</h2>
     <p><strong>Note:</strong> {{ $quotation->prescription->note }}</p>
@@ -17,7 +13,6 @@
     <p><strong>Delivery Time:</strong> {{ $quotation->prescription->delivery_time }}</p>
     <h3>Prescription Images</h3>
 
-    <!-- Prescription Images -->
     @if($quotation->prescription->images)
     @foreach(json_decode($quotation->prescription->images) as $image)
     <img src="{{ asset('storage/prescriptions/' . $image) }}" alt="Prescription Image" width="200px"
@@ -28,7 +23,6 @@
     @endif
 </div>
 
-<!-- Quotation Items -->
 <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px;">
     <h2>Quotation Items</h2>
 
@@ -58,7 +52,6 @@
     <h3>Total: ${{ number_format($quotation->total, 2) }}</h3>
 </div>
 
-<!-- Quotation Status -->
 <div style="border: 1px solid #ddd; padding: 15px; margin-bottom: 20px;">
     <h2>Quotation Status</h2>
     <p><strong>Status:</strong> {{ ucfirst($quotation->status) }}</p>
