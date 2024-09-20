@@ -12,7 +12,6 @@ body {
     padding: 20px;
 }
 
-/* Navbar Styles */
 nav {
     background-color: #f8f9fa;
     padding: 10px;
@@ -40,7 +39,7 @@ nav a:hover {
     color: #007bff;
 }
 
-/* Heading Styles */
+
 h1,
 h2,
 h3,
@@ -52,7 +51,7 @@ h1 {
     margin-bottom: 20px;
 }
 
-/* Form Styles */
+
 .form-group {
     margin-bottom: 15px;
 }
