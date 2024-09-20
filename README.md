@@ -19,6 +19,11 @@ for both user password is :- "password"
 
 got around 4 hours to finish
 
+
+Can register Regular User as many and login with their credentials. 
+Only 1 Pharmacy User with credentials pharmacy@example.com "password"
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
